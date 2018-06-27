@@ -1,9 +1,21 @@
 language: node_js
 node_js:
 - "8.10"
+services:
+- mysql
 before_install:
 - npm install -g typescript
 - npm install -g tslint
 - npm install -g tslint-eslint-rules
+- npm install -g mocha
+- mysql -e 'CREATE DATABASE IF NOT EXISTS mlforkidsdb;'
+- mysql < sql/tables.sql
+env:
+- MYSQLUSER=root
+- MYSQLPASSWORD=
+- MYSQLDATABASE=mlforkidsdb
 script:
 - tslint -c tslint.json 'src/**/*.ts'
+- npm install
+- npm test
+- tsc -p tsconfig.json
